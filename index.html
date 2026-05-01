@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>今日なにたべよ</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#FFF5F8;min-height:100vh;}
+.app{max-width:390px;margin:0 auto;background:#fff;min-height:100vh;}
+.hero{background:linear-gradient(135deg,#FBEAF0,#F4C0D1);padding:1.25rem 1rem 1rem;text-align:center;}
+.hero-emoji{font-size:28px;margin-bottom:4px;}
+.hero-title{font-size:22px;font-weight:600;color:#72243E;letter-spacing:0.02em;}
+.hero-sub{font-size:12px;color:#993556;margin-top:2px;}
+.tab-bar{display:flex;background:#fff;border-bottom:1px solid #F4C0D1;}
+.tab{flex:1;padding:11px 0;text-align:center;font-size:12px;color:#aaa;cursor:pointer;border-bottom:2px solid transparent;}
+.tab.active{color:#993556;border-bottom-color:#993556;font-weight:600;}
+.section{display:none;padding:1rem;}
+.section.active{display:block;}
+.sec-title{font-size:16px;font-weight:600;color:#333;margin-bottom:3px;}
+.sec-sub{font-size:12px;color:#999;margin-bottom:1rem;}
+.input-area{background:#FFF5F8;border-radius:12px;padding:12px;margin-bottom:1rem;}
+.input-row{display:flex;gap:6px;margin-bottom:8px;}
+.input-row input{flex:1;border:1px solid #F4C0D1;border-radius:8px;padding:7px 10px;font-size:13px;background:#fff;}
+.qty-row{display:flex;gap:6px;}
+.qty-row input{width:70px;border:1px solid #F4C0D1;border-radius:8px;padding:7px 10px;font-size:13px;background:#fff;}
+.qty-row select{flex:1;border:1px solid #F4C0D1;border-radius:8px;padding:7px 8px;font-size:13px;background:#fff;}
+.add-btn{background:#D4537E;color:white;border:none;border-radius:8px;padding:7px 14px;font-size:13px;cursor:pointer;}
+.ing-list{display:flex;flex-direction:column;gap:6px;margin-bottom:1rem;}
+.ing-item{background:#fff;border:1px solid #F4C0D1;border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;}
+.ing-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px;}
+.ing-name{font-size:14px;font-weight:600;color:#333;}
+.ing-qty{font-size:12px;color:#D4537E;margin-top:1px;}
+.ing-del{color:#ccc;cursor:pointer;font-size:20px;padding:2px 6px;margin-left:auto;}
+.ai-btn{width:100%;padding:13px;background:#D4537E;color:white;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;}
+.menu-card{background:#fff;border:1px solid #F4C0D1;border-radius:12px;padding:1rem 1.25rem;margin-bottom:10px;}
+.menu-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.menu-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;background:#FBEAF0;flex-shrink:0;}
+.menu-title{font-size:15px;font-weight:600;color:#333;}
+.menu-desc{font-size:12px;color:#999;margin-top:2px;}
+.tag-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;}
+.tag{font-size:11px;padding:2px 8px;border-radius:10px;}
+.tag-have{background:#FBEAF0;color:#993556;}
+.tag-need{background:#FAEEDA;color:#854F0B;}
+.menu-actions{display:flex;gap:8px;margin-top:8px;}
+.btn-recipe{background:#f5f5f5;color:#666;border:none;border-radius:8px;padding:6px 12px;font-size:12px;cursor:pointer;}
+.btn-shop{background:#FBEAF0;color:#993556;border:none;border-radius:8px;padding:6px 12px;font-size:12px;cursor:pointer;}
+.recipe-box{background:#FFF5F8;border-radius:8px;padding:10px 12px;margin-top:10px;display:none;}
+.recipe-box.open{display:block;}
+.recipe-step{font-size:12px;color:#444;padding:5px 0;border-bottom:1px solid #F4C0D1;line-height:1.6;}
+.recipe-step:last-child{border-bottom:none;}
+.shop-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #F4C0D1;}
+.shop-item:last-child{border-bottom:none;}
+.check-circle{width:22px;height:22px;border-radius:50%;border:2px solid #D4537E;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.check-circle.done{background:#D4537E;}
+.check-circle.done::after{content:'';display:block;width:5px;height:9px;border:2px solid white;border-top:none;border-left:none;transform:rotate(45deg) translateY(-1px);}
+.shop-name{font-size:14px;color:#333;flex:1;}
+.shop-name.done{text-decoration:line-through;color:#bbb;}
+.shop-qty{color:#D4537E;font-size:13px;}
+.shop-meta{font-size:11px;color:#D4537E;}
+.loading{text-align:center;padding:2rem;color:#999;font-size:13px;}
+.empty-msg{text-align:center;padding:2rem;color:#ccc;font-size:13px;}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="hero">
+  <div class="hero-emoji">🧺</div>
+  <div class="hero-title">今日なにたべよ</div>
+  <div class="hero-sub">食材から献立をかんがえてくれるアプリ</div>
+</div>
+<div class="tab-bar">
+  <div class="tab active" onclick="switchTab('fridge')">🧊 冷蔵庫</div>
+  <div class="tab" onclick="switchTab('menu')">🍽 献立</div>
+  <div class="tab" onclick="switchTab('shop')">🛒 買い物</div>
+</div>
+<div class="section active" id="fridge">
+  <div class="sec-title">冷蔵庫の食材</div>
+  <div class="sec-sub">今ある食材と量を登録してね</div>
+  <div class="input-area">
+    <div class="input-row">
+      <input type="text" id="ingInput" placeholder="食材名（例：卵）" />
+    </div>
+    <div class="qty-row">
+      <input type="number" id="qtyInput" placeholder="量" min="0" />
+      <select id="unitInput">
+        <option>個</option><option>g</option><option>ml</option>
+        <option>本</option><option>枚</option><option>袋</option>
+        <option>パック</option><option>適量</option>
+      </select>
+      <button class="add-btn" onclick="addIng()">追加</button>
+    </div>
+  </div>
+  <div class="ing-list" id="ingList"></div>
+  <button class="ai-btn" onclick="goMenu()">AIに献立を考えてもらう ✨</button>
+</div>
+<div class="section" id="menu">
+  <div class="sec-title">今日の献立</div>
+  <div class="sec-sub">冷蔵庫の食材からAIが提案します</div>
+  <div class="loading" id="menuLoading" style="display:none;">考えています...</div>
+  <div id="menuList"></div>
+  <div class="empty-msg" id="menuEmpty">冷蔵庫タブで食材を登録してね</div>
+</div>
+<div class="section" id="shop">
+  <div class="sec-title">買い物リスト</div>
+  <div class="sec-sub">献立に必要な食材が自動追加されます</div>
+  <div id="shopList"></div>
+  <div class="empty-msg" id="shopEmpty">献立から追加すると表示されます</div>
+</div>
+</div>
+<script>
+const ICONS={'卵':'🥚','鶏':'🍗','牛':'🥩','豚':'🥩','魚':'🐟','豆腐':'🫙','玉ねぎ':'🧅','にんじん':'🥕','トマト':'🍅','じゃがいも':'🥔','ほうれん草':'🥬','キャベツ':'🥬','もやし':'🌱','きのこ':'🍄','しめじ':'🍄','牛乳':'🥛','バター':'🧈','チーズ':'🧀','味噌':'🫙','醤油':'🍶','米':'🍚','パスタ':'🍝','default':'🥗'};
+const COLORS=['#FBEAF0','#EAF3DE','#E6F1FB','#FAEEDA','#E1F5EE'];
+function getIcon(n){for(const k of Object.keys(ICONS)){if(n.includes(k))return ICONS[k];}return ICONS.default;}
+function getColor(i){return COLORS[i%COLORS.length];}
+let ingredients=[{name:'卵',qty:6,unit:'個'},{name:'鶏もも肉',qty:300,unit:'g'},{name:'玉ねぎ',qty:1,unit:'個'},{name:'豆腐',qty:1,unit:'パック'}];
+let shopItems=[];
+const menus=[
+  {icon:'🍱',title:'親子丼',uses:['卵','鶏もも肉','玉ねぎ'],missing:[{name:'だし',qty:'200',unit:'ml'},{name:'醤油',qty:'大さじ2',unit:''},{name:'みりん',qty:'大さじ2',unit:''}],desc:'ふわとろ卵と鶏肉の定番丼',recipe:['鶏肉を一口大に切る','玉ねぎを薄切りにする','だし・醤油・みりんを合わせる','玉ねぎ→鶏肉の順で煮る','溶き卵を回しかけ半熟で止める','ごはんに盛って完成']},
+  {icon:'🍲',title:'麻婆豆腐',uses:['豆腐','玉ねぎ'],missing:[{name:'豚ひき肉',qty:'150',unit:'g'},{name:'豆板醤',qty:'小さじ1',unit:''},{name:'鶏がらスープ',qty:'150',unit:'ml'}],desc:'ピリ辛でごはんが進む一品',recipe:['豆腐を2cm角に切り湯通しする','ひき肉を炒める','豆板醤で香りを出す','スープ・醤油で味を整える','豆腐を加えさっと煮る','水溶き片栗粉でとろみをつける']},
+  {icon:'🥣',title:'ふわふわ卵スープ',uses:['卵','玉ねぎ'],missing:[{name:'鶏がらスープの素',qty:'小さじ2',unit:''}],desc:'5分で作れる体に優しいスープ',recipe:['鍋にお湯を沸かしスープの素を溶かす','玉ねぎを薄切りにして加える','2分煮たら溶き卵を回し入れる','塩こしょうで味を整えて完成']}
+];
+function renderIngredients(){
+  document.getElementById('ingList').innerHTML=ingredients.map((ing,i)=>`<div class="ing-item"><div class="ing-icon" style="background:${getColor(i)}">${getIcon(ing.name)}</div><div><div class="ing-name">${ing.name}</div><div class="ing-qty">${ing.qty} ${ing.unit}</div></div><div class="ing-del" onclick="removeIng(${i})">×</div></div>`).join('');
+}
+function addIng(){
+  const name=document.getElementById('ingInput').value.trim();
+  const qty=document.getElementById('qtyInput').value.trim();
+  const unit=document.getElementById('unitInput').value;
+  if(!name)return;
+  ingredients.push({name,qty:qty||'適量',unit:qty?unit:''});
+  document.getElementById('ingInput').value='';
+  document.getElementById('qtyInput').value='';
+  renderIngredients();
+}
+function removeIng(i){ingredients.splice(i,1);renderIngredients();}
+function switchTab(tab){
+  document.querySelectorAll('.tab').forEach((t,i)=>{t.classList.toggle('active',['fridge','menu','shop'][i]===tab);});
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(tab).classList.add('active');
+}
+function goMenu(){switchTab('menu');renderMenus();}
+function renderMenus(){
+  const list=document.getElementById('menuList');
+  const empty=document.getElementById('menuEmpty');
+  const loading=document.getElementById('menuLoading');
+  if(!ingredients.length){empty.style.display='block';list.innerHTML='';return;}
+  empty.style.display='none';loading.style.display='block';list.innerHTML='';
+  setTimeout(()=>{
+    loading.style.display='none';
+    const ingNames=ingredients.map(i=>i.name);
+    const filtered=menus.filter(m=>m.uses.some(u=>ingNames.some(n=>n.includes(u)||u.includes(n))));
+    if(!filtered.length){empty.style.display='block';return;}
+    window._filteredMenus=filtered;
+    list.innerHTML=filtered.map((m,i)=>`<div class="menu-card"><div class="menu-head"><div class="menu-icon">${m.icon}</div><div><div class="menu-title">${m.title}</div><div class="menu-desc">${m.desc}</div></div></div><div class="tag-row">${m.uses.filter(u=>ingNames.some(n=>n.includes(u)||u.includes(n))).map(u=>`<span class="tag tag-have">${u} あり</span>`).join('')}${m.missing.map(u=>`<span class="tag tag-need">${u.name} ${u.qty}${u.unit} 要</span>`).join('')}</div><div class="menu-actions"><button class="btn-recipe" onclick="toggleRecipe(${i})">レシピ ↓</button><button class="btn-shop" onclick="addToShop(${i})">買い物リストに追加</button></div><div class="recipe-box" id="recipe${i}">${m.recipe.map((s,j)=>`<div class="recipe-step">${j+1}. ${s}</div>`).join('')}</div></div>`).join('');
+  },1000);
+}
+function toggleRecipe(i){document.getElementById('recipe'+i).classList.toggle('open');}
+function addToShop(i){
+  const m=window._filteredMenus[i];
+  m.missing.forEach(item=>{if(!shopItems.find(s=>s.name===item.name))shopItems.push({name:item.name,qty:item.qty,unit:item.unit,source:m.title,done:false});});
+  renderShop();switchTab('shop');
+}
+function renderShop(){
+  const list=document.getElementById('shopList');
+  const empty=document.getElementById('shopEmpty');
+  if(!shopItems.length){empty.style.display='block';list.innerHTML='';return;}
+  empty.style.display='none';
+  list.innerHTML=shopItems.map((item,i)=>`<div class="shop-item"><div class="check-circle ${item.done?'done':''}" onclick="toggleShop(${i})"></div><div style="flex:1"><div class="shop-name ${item.done?'done':''}">${item.name} <span class="shop-qty">${item.qty}${item.unit}</span></div><div class="shop-meta">${item.source}に必要</div></div></div>`).join('');
+}
+function toggleShop(i){shopItems[i].done=!shopItems[i].done;renderShop();}
+renderIngredients();renderShop();
+</script>
+</body>
+</html>
