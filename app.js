@@ -14,6 +14,7 @@ function daysLeft(date){const now=new Date();const today=Date.UTC(now.getFullYea
 function el(tag,cls,text){const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n;}
 function action(text,cls,handler){const b=el('button',cls,text);b.type='button';b.addEventListener('click',handler);return b;}
 function render(){
+ window.dispatchEvent(new Event("inventory-updated"));
  $('total').textContent=foods.length;$('soon').textContent=foods.filter(f=>f.quantity>0&&f.expiry&&daysLeft(f.expiry)>=0&&daysLeft(f.expiry)<=3).length;
  const query=$('search').value.trim().toLocaleLowerCase();const visible=foods.filter(f=>(filter==='all'||f.storage===filter)&&f.name.toLocaleLowerCase().includes(query)).sort((a,b)=>(a.expiry||'9999').localeCompare(b.expiry||'9999'));
  $('count').textContent=visible.length+'件';const list=$('food-list');list.replaceChildren();

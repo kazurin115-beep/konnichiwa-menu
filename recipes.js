@@ -1,0 +1,11 @@
+'use strict';
+// Names and aliases are explicit: matching never treats 牛乳 as 牛肉 or 卵 as 卵焼き.
+const recipeIngredient=(name,quantity,unit,aliases=[])=>({name,quantity,unit,aliases:[name,...aliases]});
+const RECIPE_BOOK=[
+{id:'oyakodon',name:'親子丼',minutes:20,ingredients:[recipeIngredient('卵',2,'個',['たまご','玉子']),recipeIngredient('鶏もも肉',200,'g',['鶏肉','とり肉']),recipeIngredient('玉ねぎ',1,'個',['玉葱','たまねぎ']),recipeIngredient('ごはん',2,'杯',['ご飯']),recipeIngredient('醤油',2,'大さじ',['しょうゆ']),recipeIngredient('みりん',2,'大さじ'),recipeIngredient('だし',100,'ml')],steps:['鶏肉を一口大に、玉ねぎを薄切りにします。','鍋にだし・醤油・みりんと玉ねぎを入れて煮ます。','鶏肉を加え、中心まで十分に火を通します。','溶き卵を加え、好みの固さになるまで火を通します。ごはんにのせて完成です。']},
+{id:'friedrice',name:'卵チャーハン',minutes:15,ingredients:[recipeIngredient('卵',2,'個',['たまご','玉子']),recipeIngredient('ごはん',2,'杯',['ご飯']),recipeIngredient('ねぎ',0.5,'本',['長ねぎ','長ネギ','ネギ']),recipeIngredient('油',1,'大さじ',['サラダ油']),recipeIngredient('醤油',1,'小さじ',['しょうゆ']),recipeIngredient('塩',1,'適量')],steps:['ねぎを細かく刻み、卵を溶きます。','フライパンに油を熱し、卵とごはんを入れてほぐしながら炒めます。','ねぎを加え、全体に火が通ったら醤油と塩で味を整えます。']},
+{id:'tofu',name:'豆腐ときのこの温かい煮物',minutes:15,ingredients:[recipeIngredient('豆腐',1,'パック',['木綿豆腐','絹豆腐','絹ごし豆腐']),recipeIngredient('しめじ',1,'パック',['ぶなしめじ']),recipeIngredient('醤油',1,'大さじ',['しょうゆ']),recipeIngredient('みりん',1,'大さじ'),recipeIngredient('だし',200,'ml')],steps:['豆腐を食べやすい大きさに切り、しめじの石づきを除いてほぐします。','鍋にだし・醤油・みりんを入れ、豆腐としめじを加えます。','きのこに十分に火が通るまで煮て完成です。']},
+{id:'cabbage',name:'豚肉とキャベツの炒め物',minutes:15,ingredients:[recipeIngredient('豚肉',200,'g',['豚こま肉','豚こま','豚バラ肉','豚バラ','豚ロース']),recipeIngredient('キャベツ',200,'g'),recipeIngredient('油',1,'大さじ',['サラダ油']),recipeIngredient('醤油',1,'大さじ',['しょうゆ']),recipeIngredient('塩',1,'適量')],steps:['キャベツと豚肉を食べやすい大きさに切ります。','油を熱したフライパンで豚肉を炒め、中心まで十分に火を通します。','キャベツを加えて炒め、醤油と塩で味を整えます。']},
+{id:'potato',name:'じゃがいもと玉ねぎの味噌汁',minutes:20,ingredients:[recipeIngredient('じゃがいも',2,'個',['ジャガイモ']),recipeIngredient('玉ねぎ',0.5,'個',['玉葱','たまねぎ']),recipeIngredient('味噌',2,'大さじ',['みそ']),recipeIngredient('だし',400,'ml')],steps:['じゃがいもは皮をむいて薄く切り、玉ねぎは薄切りにします。','だしに野菜を加え、じゃがいもが柔らかくなるまで煮ます。','火を弱めて味噌を溶き入れ、沸騰させず温めます。']},
+{id:'tomato',name:'トマトと卵の炒め物',minutes:10,ingredients:[recipeIngredient('トマト',2,'個'),recipeIngredient('卵',3,'個',['たまご','玉子']),recipeIngredient('油',1,'大さじ',['サラダ油']),recipeIngredient('塩',1,'適量')],steps:['トマトをくし切りにし、卵を溶きます。','油を熱したフライパンで卵を炒め、一度取り出します。','トマトを炒め、卵を戻して十分に火を通し、塩で味を整えます。']}
+];
