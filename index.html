@@ -4,11 +4,11 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#e8f1e8"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="かずちゃんの冷蔵庫">
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg"><link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="styles.css"><script src="app.js" defer></script><script src="recipes.js" defer></script><script src="menus.js" defer></script><title>かずちゃんの冷蔵庫</title>
+<link rel="stylesheet" href="styles.css"><script src="app.js" defer></script><script src="recipes.js" defer></script><script src="menus.js" defer></script><script src="appearance.js" defer></script><title>かずちゃんの冷蔵庫</title>
 </head>
 <body>
 <main>
-<header><p class="eyebrow">毎日のごはんを、気持ちよく。</p><h1>かずちゃんの冷蔵庫</h1><p>あるものを見つけて、おいしく使い切ろう。</p></header>
+<header class="welcome"><p class="eyebrow">暮らしを整える、ちいさな習慣。</p><h1>かずちゃんの冷蔵庫</h1><p class="welcome-sub">あるものを大切に。今日もおいしい一日に。</p><div class="cat-scene"><span class="cat-note">今日のごはん、いっしょに考えよう。</span><img class="cat-mascot" src="assets/cat.png" width="124" height="124" alt="淡いグリーンのリボンをつけた猫"><span class="cat-shadow" aria-hidden="true"></span></div><button id="motion-toggle" class="motion-toggle secondary" type="button" aria-pressed="false">猫の動きを止める</button></header>
 <div id="notice" role="status" aria-live="polite"></div>
 <section class="summary" aria-label="在庫の概要"><div><strong id="total">0</strong><span>登録した食材</span></div><div><strong id="soon">0</strong><span>期限まであと3日以内</span></div></section>
 <section class="panel"><div class="section-head"><h2 id="form-title">食材を登録</h2><span class="subtle">＊は必須</span></div>
